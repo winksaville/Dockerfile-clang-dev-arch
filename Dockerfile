@@ -1,4 +1,4 @@
-FROM archimg/base-devel
+FROM archimg/base
 
 RUN pacman -Syu --noconfirm \
   bash-completion \
@@ -6,10 +6,13 @@ RUN pacman -Syu --noconfirm \
   cmake \
   gdb \
   git \
+  ninja \
   nodejs \
   python \
+  sudo \
   vim \
-  wget
+  wget \
+  zlib
 
 # add user wink  and don't require a password to use sudo
 # since I haven't been able to successfully add passwords :(
@@ -32,9 +35,13 @@ RUN pacman -Syu --noconfirm \
 # https://gist.github.com/marten-cz/77b48b15928eb6f10c901073ff3e3425 didn't.
 RUN \
  groupmod -g 100 users && groupmod -g 10 wheel \
- && ln -sfn `which vim` `which vi` \
  && sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers \
+ && ln -sfn /usr/bin/clang /usr/bin/cc \
+ && ln -sfn /usr/bin/clang++ /usr/bin/c++ \
+ && rm /usr/bin/gcc* \
+ && rm /usr/bin/g++ \
  && useradd -ms /bin/bash -d /home/wink -G wheel -g users -u 1000 wink
+
 
 # Login as user wink
 USER wink
