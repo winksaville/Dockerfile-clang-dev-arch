@@ -1,0 +1,19 @@
+# To run this interactively and remove the running image:
+#   $ docker-compose run --rm clang-dev
+#
+# Add -w `pwd` to log in at the current pwd.
+#   $ docker-compose run --rm -w `pwd` clang-dev
+
+version: '3'
+services:
+  clang-dev:
+    image: winksaville/clang-dev:arch
+    network_mode: bridge
+    privileged: true
+    volumes:
+     - /home:/home
+     - /etc/group:/etc/group:ro
+     - /etc/gshadow:/etc/gshadow:ro
+     - /etc/passwd:/etc/passwd:ro
+     - /etc/shadow:/etc/shadow:ro
+     - /etc/sudoers:/etc/sudoers:ro

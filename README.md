@@ -12,46 +12,19 @@ docker pull winksaville/clang-dev:arch
 docker build -t winksaville/clang-dev:arch .
 ```
 
-# Run image to test
+# Run image
 
-Run the arch image as the current user, which is assumed
-to be a user in the docker image. Adding "--privileged"
-is useful to run gdb.
+The easy way to run the image is use docker-compose which
+uses docker-compose.yml to set the volumes and the network
+(runs in privileged mode so gdb can be used):
 ```bash
-docker run --name arch --user=wink -v /home/wink:/home/wink --rm -i -t winksaville/clang-dev:arch
+docker-compose run --rm -w `pwd` clang-dev
 ```
 
-Here is an attempt to run and map passwd, group and shadow to share the information
-with the container. But it doesn't quite work :(
-See: https://medium.com/@pawitp/syncing-host-and-container-users-in-docker-39337eff0094
-```
-docker run --name arch --privileged --user=$USER -v /etc/group:/etc/group:ro -v /etc/passwd:/etc/passwd:ro -v /home:/home --rm -i -t winksaville/clang-dev:arch
-```
-
-When I do something like create a file the user is OK but group is 1000 not "users"
-```
-wink@c26b8958de3d:~
-$ touch z3.txt
-wink@c26b8958de3d:~
-$ ls -al z3.txt
--rw-r--r-- 1 wink 1000 0 Jul  2 21:51 z3.txt
-```
-And sudo doesn't work, the password get asked for and it isn't evaluted
-correctly. I have something wrong.
-
-# Run CircleCI jobs locally
-
-Use the [CircleCI CLI](https://circleci.com/docs/2.0/local-cli/) to run the
-CI job using this image from the project root:
-
+To manually run the image as the current user which is
+equivalent to docker-compose above:
 ```bash
-circleci build --job arch-debug
-circleci build --job arch-release
-```
-Note: when building you might want to set CPUs environment
-variable to speed up the build:
-```bash
-circleci build -e CPUs=10 --job arch-debug
+docker run --privileged --name clang-dev --user=$USER -v /home:/home -w `pwd` -v /etc/group:/etc/group:ro -v /etc/gshadow:/etc/gshadow:ro -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/sudoers:/etc/sudoers:ro --rm -it winksaville/clang-dev:arch
 ```
 
 # Push to dockerhub

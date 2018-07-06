@@ -9,11 +9,9 @@
 # of volume mappings using -v for home, group, gshadow, passwd, shadow and
 # sudoers. The '-w `pwd`' will set the current directory as the initial
 # directory. The complete command line is:
-#   $ docker run --name clang-dev --user=$USER -v /home:/home -w `pwd` \
-#    -v /etc/group:/etc/group:ro -v /etc/gshadow:/etc/gshadow \
-#    -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow \
-#    -v /etc/sudoers:/etc/sudoers \
-#    --rm --entrypoint=/usr/bin/bash -i -t winksaville/clang-dev:arch
+# $ docker run --name clang-dev --user=$USER -v /home:/home -w `pwd` -v /etc/group:/etc/group:ro -v /etc/gshadow:/etc/gshadow:ro -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/sudoers:/etc/sudoers:ro --rm -it winksaville/clang-dev:arch
+#
+# Or try docker-compose --rm -w `pwd` clang-dev
 
 FROM archimg/base
 
