@@ -13,7 +13,7 @@
 #
 # Or try docker-compose --rm -w `pwd` clang-dev
 
-FROM archimg/base
+FROM archlinux/base
 
 RUN pacman -Syu --noconfirm \
   bash-completion \
